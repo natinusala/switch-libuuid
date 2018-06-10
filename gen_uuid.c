@@ -278,9 +278,9 @@ static int get_clock(uint32_t *clock_high, uint32_t *clock_low,
 	int				ret = 0;
 
 	if (state_fd == -2) {
-		save_umask = umask(0);
+		//save_umask = umask(0);
 		state_fd = open(LIBUUID_CLOCK_FILE, O_RDWR|O_CREAT|O_CLOEXEC, 0660);
-		(void) umask(save_umask);
+		//(void) umask(save_umask);
 		if (state_fd != -1) {
 			state_f = fdopen(state_fd, "r+" UL_CLOEXECSTR);
 			if (!state_f) {

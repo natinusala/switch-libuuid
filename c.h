@@ -31,9 +31,7 @@
 # include <err.h>
 #endif
 
-#ifndef HAVE_USLEEP
-# include <time.h>
-#endif
+#include <switch.h>
 
 /*
  * Compiler specific stuff
@@ -266,21 +264,6 @@ static inline size_t get_hostname_max(void)
 #endif
 	return 64;
 }
-
-#ifndef HAVE_USLEEP
-/*
- * This function is marked obsolete in POSIX.1-2001 and removed in
- * POSIX.1-2008. It is replaced with nanosleep().
- */
-static inline int usleep(useconds_t usec)
-{
-	struct timespec waittime = {
-		.tv_sec   =  usec / 1000000L,
-		.tv_nsec  = (usec % 1000000L) * 1000
-	};
-	return nanosleep(&waittime, NULL);
-}
-#endif
 
 /*
  * Constant strings for usage() functions. For more info see

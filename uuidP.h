@@ -37,7 +37,7 @@
 
 #include "uuid.h"
 
-#define LIBUUID_CLOCK_FILE	"/var/lib/libuuid/clock.txt"
+#define LIBUUID_CLOCK_FILE	"uuid_clock.txt"
 
 /*
  * Offset between 15-Oct-1582 and 1-Jan-70

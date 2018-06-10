@@ -29,7 +29,7 @@ static inline int write_all(int fd, const void *buf, size_t count)
 		} else if (errno != EINTR && errno != EAGAIN)
 			return -1;
 		if (errno == EAGAIN)	/* Try later, *sigh* */
-			usleep(10000);
+			svcSleepThread(1000 * 10000);
 	}
 	return 0;
 }
@@ -49,7 +49,7 @@ static inline int fwrite_all(const void *ptr, size_t size,
 		} else if (errno != EINTR && errno != EAGAIN)
 			return -1;
 		if (errno == EAGAIN)	/* Try later, *sigh* */
-			usleep(10000);
+			svcSleepThread(1000 * 10000);
 	}
 	return 0;
 }
