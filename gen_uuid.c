@@ -99,47 +99,6 @@
 #define THREAD_LOCAL static
 #endif
 
-/* flock() replacement */
-#define LOCK_EX 1
-#define LOCK_SH 2
-#define LOCK_UN 3
-#define LOCK_NB 4
-
-static int flock(int fd, int op)
-{
-    int rc = 0;
-
-#if defined(F_SETLK) && defined(F_SETLKW)
-    struct flock fl = {0};
-
-    switch (op & (LOCK_EX|LOCK_SH|LOCK_UN)) {
-    case LOCK_EX:
-        fl.l_type = F_WRLCK;
-        break;
-
-    case LOCK_SH:
-        fl.l_type = F_RDLCK;
-        break;
-
-    case LOCK_UN:
-        fl.l_type = F_UNLCK;
-        break;
-
-    default:
-        errno = EINVAL;
-        return -1;
-    }
-
-    fl.l_whence = SEEK_SET;
-    rc = fcntl (fd, op & LOCK_NB ? F_SETLK : F_SETLKW, &fl);
-
-    if (rc && (errno == EAGAIN))
-        errno = EWOULDBLOCK;
-#endif /* defined(F_SETLK) && defined(F_SETLKW)  */
-
-    return rc;
-}
-
 #ifdef _WIN32
 static void gettimeofday (struct timeval *tv, void *dummy)
 {
@@ -291,15 +250,14 @@ static int get_clock(uint32_t *clock_high, uint32_t *clock_low,
 	}
 	if (state_fd >= 0) {
 		rewind(state_f);
-		while (flock(state_fd, LOCK_EX) < 0) {
-			if ((errno == EAGAIN) || (errno == EINTR))
-				continue;
+		
+			
 			fclose(state_f);
 			close(state_fd);
 			state_fd = -1;
 			ret = -1;
-			break;
-		}
+			
+		
 	}
 	if (state_fd >= 0) {
 		unsigned int cl;
@@ -363,7 +321,6 @@ try_again:
 			fflush(state_f);
 		}
 		rewind(state_f);
-		flock(state_fd, LOCK_UN);
 	}
 
 	*clock_high = clock_reg >> 32;
