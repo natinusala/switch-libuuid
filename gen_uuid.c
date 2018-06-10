@@ -99,7 +99,6 @@
 #define THREAD_LOCAL static
 #endif
 
-#ifndef LOCK_EX
 /* flock() replacement */
 #define LOCK_EX 1
 #define LOCK_SH 2
@@ -140,8 +139,6 @@ static int flock(int fd, int op)
 
     return rc;
 }
-
-#endif /* LOCK_EX */
 
 #ifdef _WIN32
 static void gettimeofday (struct timeval *tv, void *dummy)
